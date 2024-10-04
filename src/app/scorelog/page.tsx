@@ -1,126 +1,194 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+
+import React, { useState } from "react";
+import "../css/scorelog.css"; // Updated CSS file
+
+type ZoneKey = "A" | "B" | "C" | "D" | "E" | "4" | "6";
 
 const ScoreLog = () => {
-  const [striker, setStriker] = useState('Batsman A');
-  const [nonStriker, setNonStriker] = useState('Batsman B');
-  const [bowler, setBowler] = useState('Bowler X');
+  const [striker, setStriker] = useState("Batsman A");
+  const [nonStriker, setNonStriker] = useState("Batsman B");
+  const [bowler, setBowler] = useState("Bowler X");
   const [totalRuns, setTotalRuns] = useState(0);
-  const [balls, setBalls] = useState(0);  // Total balls in the over
-  const [overBalls, setOverBalls] = useState(0);  // Balls count for the bowler
+  const [balls, setBalls] = useState(0); // balls in the current over
+  const [overs, setOvers] = useState(0); // complete overs
   const [dismissal, setDismissal] = useState<string | null>(null);
-  const [pendingZoneRuns, setPendingZoneRuns] = useState<number>(0); // Store zone runs temporarily
-  const [pendingExtraRuns, setPendingExtraRuns] = useState<number>(0); // Store extra runs temporarily
+  const [pendingZoneRuns, setPendingZoneRuns] = useState<number>(0);
+  const [pendingExtraRuns, setPendingExtraRuns] = useState<number>(0);
 
-  // Define zones with corresponding runs
-  const zones = { A: 1, B: 3, C: 2, D: 1, E: 1, '4': 4, '6': 6 };
+  const zones: Record<ZoneKey, number> = {
+    A: 1,
+    B: 3,
+    C: 2,
+    D: 1,
+    E: 1,
+    "4": 4,
+    "6": 6,
+  };
 
-  // Handle zone click
-  const handleZoneClick = (zone: string) => {
+  const handleZoneClick = (zone: ZoneKey) => {
     const zoneRuns = zones[zone];
     setPendingZoneRuns(zoneRuns);
   };
 
-  // Handle extra runs input
   const handleExtraRuns = (extraRuns: number) => {
     setPendingExtraRuns(extraRuns);
   };
 
-  // Handle run submission (for both zone and extra runs)
   const submitRun = () => {
     const totalRunForThisBall = pendingZoneRuns + pendingExtraRuns;
 
-    // Increment ball count only once
-    setBalls((prevBalls) => prevBalls + 1);
-    setOverBalls((prevBalls) => prevBalls + 1);
-
-    // Update total score
+    // Increment the total runs
     setTotalRuns((prevTotal) => prevTotal + totalRunForThisBall);
 
-    // Check if striker should be switched (total runs for the ball is odd)
+    // Increment balls bowled in the current over
+    setBalls((prevBalls) => {
+      const newBalls = prevBalls + 1;
+
+      if (newBalls === 6) {
+        setOvers((prevOvers) => prevOvers + 1);
+        return 0; // reset balls
+      }
+      return newBalls; // return updated balls count
+    });
+
     if (totalRunForThisBall % 2 !== 0) {
       switchStriker();
     }
 
-    // Clear pending runs for next ball
     setPendingZoneRuns(0);
     setPendingExtraRuns(0);
-
-    // End of over logic (6 balls bowled)
-    if (balls + 1 === 6) {
-      handleEndOfOver();
-    }
   };
 
-  // Function to switch the striker
   const switchStriker = () => {
     const temp = striker;
     setStriker(nonStriker);
     setNonStriker(temp);
   };
 
-  // Function to handle the end of over
-  const handleEndOfOver = () => {
-    // Switch striker automatically after 6 balls
-    switchStriker();
-    setBalls(0); // Reset ball count for the new over
-    setOverBalls(0); // Reset bowler's ball count
-    alert('End of Over');
-  };
-
-  // Handle player dismissal (caught, bowled, LBW, run out, etc.)
-  const handlePlayerOut = (outType: string) => {
-    setDismissal(outType);
-    setBalls((prevBalls) => prevBalls + 1);
-    setOverBalls((prevBalls) => prevBalls + 1);
-
-    // Add logic to change the batsman after out
-    alert(`Player got out: ${outType}`);
-  };
-
   return (
-    <div>
+    <div className="container">
       <h1>Cricket Score Log</h1>
-      <div>
-        <h2>Striker: {striker}</h2>
-        <h2>Non-Striker: {nonStriker}</h2>
-        <h2>Bowler: {bowler}</h2>
-        <h3>Bowler's Ball Count: {overBalls}/6</h3>
-      </div>
 
-      <div>
-        <h3>Select Zone:</h3>
-        {Object.keys(zones).map((zone) => (
-          <button key={zone} onClick={() => handleZoneClick(zone)}>
-            {zone}
-          </button>
-        ))}
-      </div>
+      <div className="score-table">
+        <table className="score-summary-table">
+          <thead className="score-summary-head">
+            <tr className="score-summary-row">
+              <th colSpan={2}>Score</th>
+              <th colSpan={7}>
+                {totalRuns} / {overs}.{balls} overs
+              </th>
+            </tr>
+            <tr className="this-over-head-row">
+              <th colSpan={3}>This Over</th>
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
+              <td>6</td>
+            </tr>
+            <tr className="bat-no-1-row">
+              <th colSpan={3}>Bat No. 1</th>
+              <td>4</td>
+              <td>X</td>
+              <td>8</td>
+              <td>2</td>
+              <td>3</td>
+              <td>-</td>
+            </tr>
+            <tr className="bat-no-2-row">
+              <th colSpan={3}>Bat No. 2</th>
+              <td>X</td>
+              <td>X</td>
+              <td>3</td>
+              <td>5</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr className="skin-score-row">
+              <th colSpan={2}>SKIN No. / SCORE</th>
+              <td colSpan={2}>16</td>
+              <td colSpan={2}>20</td>
+              <td colSpan={2}>26</td>
+              <td colSpan={2}>23</td>
+            </tr>
+          </thead>
+        </table>
 
-      <div>
-        <h3>Extra Runs:</h3>
-        <input
-          type="number"
-          placeholder="Extra Runs"
-          onChange={(e) => handleExtraRuns(Number(e.target.value))}
-        />
-      </div>
+        <table className="zone-table">
+          <thead className="zone-table-head">
+            <tr className="zone-head-row">
+              <th colSpan={5}>Zone</th>
+            </tr>
+            <tr className="zone-row">
+              <td>B</td>
+              <td>C</td>
+              <td>D</td>
+              <td>E</td>
+              <td>-</td>
+            </tr>
+          </thead>
+        </table>
 
-      <div>
-        <button onClick={submitRun}>Submit Run</button>
-      </div>
+        <table className="additional-run-table">
+          <thead className="additional-run-head">
+            <tr className="additional-run-head-row">
+              <th colSpan={7}>Additional Run</th>
+            </tr>
+            <tr className="additional-run-row">
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
+              <td>6</td>
+              <td>7</td>
+            </tr>
+          </thead>
+        </table>
 
-      <div>
-        <h3>Total Score: {totalRuns} Runs</h3>
-        <h3>Balls Bowled: {balls}/6</h3>
-      </div>
-
-      <div>
-        <h3>Player Out:</h3>
-        <button onClick={() => handlePlayerOut('Caught')}>Caught</button>
-        <button onClick={() => handlePlayerOut('Bowled')}>Bowled</button>
-        <button onClick={() => handlePlayerOut('LBW')}>LBW</button>
-        <button onClick={() => handlePlayerOut('Run Out')}>Run Out</button>
+        <h3>Player Out Table</h3>
+        <table className="player-out-table">
+          <thead className="player-out-head">
+            <tr className="player-out-head-row">
+              <th colSpan={10}>OUT</th>
+            </tr>
+            <tr className="player-out-subhead-row">
+              <td> </td>
+              <td> </td>
+              <td>B</td>
+              <td>C</td>
+              <td>L</td>
+              <td>R</td>
+              <td>CB</td>
+              <td>H</td>
+              <td>WK</td>
+            </tr>
+            <tr className="player-out-row">
+              <th>Player No.</th>
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
+              <td>6</td>
+              <td>7</td>
+              <td>8</td>
+            </tr>
+            <tr className="bowler-out-row">
+              <th>Bowler No.</th>
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
+              <td>6</td>
+              <td>7</td>
+              <td>8</td>
+            </tr>
+          </thead>
+        </table>
       </div>
     </div>
   );
