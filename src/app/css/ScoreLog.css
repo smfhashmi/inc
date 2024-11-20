@@ -1,0 +1,138 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+h1, h3 {
+    text-align: center;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Score Summary Table */
+.score-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.score-summary-head th {
+    background-color: #6f42c1; /* Purple */
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center; /* Center align header text */
+}
+
+.score-summary-head td {
+    background-color: #d1cdda; /* Light Purple */
+    color: #333; /* Darker text for better visibility */
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center; /* Center align cell text */
+}
+
+/* Individual rows in the score summary */
+.score-summary-row td,
+.this-over-head-row td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center; /* Center align all cell text */
+}
+
+/* Striker Batsman Row */
+.bat-no-1-row {
+    background-color: #add8e6; /* Light Blue for Striker */
+    color: #333; /* Text color */
+}
+
+/* Non-Striker Batsman Row */
+.bat-no-2-row {
+    background-color: #fff3cd; /* Light Yellow for Non-Striker */
+    color: #333; /* Text color */
+}
+
+/* Skin Score Row */
+.skin-score-row td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    background-color: #f0f0f0; /* Light Gray */
+    text-align: center; /* Center align all cell text */
+}
+
+/* Zone Table */
+.zone-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.zone-table-head th {
+    text-align: center;
+    background-color: #28a745; /* Green */
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.zone-table-head td {
+    background-color: #c4e4cc; /* Light Green */
+    color: #333;
+    text-align: center; /* Center align all cell text */
+}
+
+/* Additional Run Table */
+.additional-run-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.additional-run-head th {
+    background-color: #007bff; /* Blue */
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center; /* Center align header text */
+}
+
+.additional-run-head td {
+    background-color: #f8f9fa; /* Very Light Gray */
+    color: #333;
+    text-align: center; /* Center align all cell text */
+}
+
+/* Player Out Table */
+.player-out-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.player-out-head th,
+.player-out-subhead-row td {
+    background-color: #d91111; /* Orange */
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center; /* Center align header text */
+}
+
+.player-out-row td,
+.bowler-out-row td {
+    padding: 12px;
+    background-color: #fff3cd; /* Light Yellow */
+    color: #333;
+    border: 1px solid #ddd;
+    text-align: center; /* Center align all cell text */
+}
